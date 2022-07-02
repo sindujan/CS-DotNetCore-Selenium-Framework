@@ -20,30 +20,29 @@ namespace CS.Core.TestAuto.Framework.Extensions
 
         public static void WaitForCondition<T>(this T obj, Func<T, bool> condition, int timeOut)
         {
-            Func<T, bool> execute =
-                (arg) =>
+            bool execute(T arg)
+            {
+                try
                 {
-                    try
-                    {
-                        return condition(arg);
-                    }
-                    catch (Exception e)
-                    {
-                        return false;
-                    }
-                };
+                    return condition(arg);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
 
             var stopWatch = Stopwatch.StartNew();
             LoopingWait(obj, timeOut, execute, stopWatch);
+        }
 
-            static void LoopingWait<T>(T obj, int timeOut, Func<T, bool> execute, Stopwatch stopWatch)
+        private static void LoopingWait<T>(T obj, int timeOut, Func<T, bool> execute, Stopwatch stopWatch)
+        {
+            while (stopWatch.ElapsedMilliseconds < timeOut)
             {
-                while (stopWatch.ElapsedMilliseconds < timeOut)
+                if (execute(obj))
                 {
-                    if (execute(obj))
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
         }
@@ -57,7 +56,7 @@ namespace CS.Core.TestAuto.Framework.Extensions
                     return remoteWebDriver.FindElementById(element);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new ElementNotVisibleException($"Element not found : {element}");
             }
@@ -73,7 +72,7 @@ namespace CS.Core.TestAuto.Framework.Extensions
                     return remoteWebDriver.FindElementByXPath(element);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new ElementNotVisibleException($"Element not found : {element}");
             }
@@ -89,7 +88,7 @@ namespace CS.Core.TestAuto.Framework.Extensions
                     return remoteWebDriver.FindElementByCssSelector(element);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new ElementNotVisibleException($"Element not found : {element}");
             }
@@ -105,7 +104,7 @@ namespace CS.Core.TestAuto.Framework.Extensions
                     return remoteWebDriver.FindElementByLinkText(element);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new ElementNotVisibleException($"Element not found : {element}");
             }

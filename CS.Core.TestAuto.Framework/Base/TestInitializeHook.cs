@@ -45,12 +45,12 @@ namespace CS.Core.TestAuto.Framework.Base
                     driverOptions = new InternetExplorerOptions();
                     break;
                 case FirefoxOptions firefoxOptions:
-                    firefoxOptions.AddAdditionalCapability(CapabilityType.BrowserName, "firefox");
-                    firefoxOptions.AddAdditionalCapability(CapabilityType.Platform, new Platform(PlatformType.Windows));
+                    firefoxOptions.AddAdditionalFirefoxOption(CapabilityType.BrowserName, "firefox");
+                    firefoxOptions.AddAdditionalFirefoxOption(CapabilityType.Platform, new Platform(PlatformType.Windows));
                     firefoxOptions.BrowserExecutableLocation = @"C:\Program Files (x86)\Mozilla Firefox\firefox.exe";
                     break;
                 case ChromeOptions chromeOptions:
-                    chromeOptions.AddAdditionalCapability(CapabilityType.EnableProfiling, true, true);
+                    chromeOptions.AddAdditionalChromeOption(CapabilityType.EnableProfiling, true);
                     break;
             }
 
@@ -66,17 +66,13 @@ namespace CS.Core.TestAuto.Framework.Base
 
         public DriverOptions GetBrowserOption(BrowserType browserType)
         {
-            switch (browserType)
+            return browserType switch
             {
-                case BrowserType.InternetExplorer:
-                    return new InternetExplorerOptions();
-                case BrowserType.FireFox:
-                    return new FirefoxOptions();
-                case BrowserType.Chrome:
-                    return new ChromeOptions();
-                default:
-                    return new ChromeOptions();
-            }
+                BrowserType.InternetExplorer => new InternetExplorerOptions(),
+                BrowserType.FireFox => new FirefoxOptions(),
+                BrowserType.Chrome => new ChromeOptions(),
+                _ => new ChromeOptions(),
+            };
         }
     }
 }

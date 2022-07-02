@@ -81,7 +81,7 @@ namespace CS.Core.TestAuto.Framework.Helpers
                 //var datas = dataCol.Where(x => x.colName == columnName && x.rowNumber == rowNumber).SingleOrDefault().colValue;
                 return data.ToString();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
